@@ -17,14 +17,18 @@ type rule struct {
 }
 
 type Board struct {
-	content [9]rune
+	finished bool
+	draw     bool
+	content  [9]rune
 }
 
 func (b *Board) New() *Board {
 	b = new(Board)
 
+	b.finished = false
+	b.draw = false
 	for i := range b.content {
-		b.content[i] = 'x'
+		b.content[i] = ' '
 	}
 
 	return b
@@ -89,8 +93,6 @@ func (b *Board) VerifyWinningConditions() string {
 		if c && out == "" {
 			out = rules[i].name
 		}
-
-		println(c)
 	}
 
 	return out
@@ -102,7 +104,17 @@ func (b *Board) MarkThisPosition(pos int, marker rune) (string, error) {
 	}
 
 	b.content[pos] = marker
-	return b.VerifyWinningConditions(), nil
+	res := b.VerifyWinningConditions()
+
+	if res != "" {
+		b.finished = true
+	}
+
+	return res, nil
+}
+
+func (b *Board) HasTheGameFinished() bool {
+	return b.finished
 }
 
 func (b *Board) GetBoard() [9]rune {
