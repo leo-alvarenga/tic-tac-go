@@ -1,0 +1,25 @@
+name: Continuous Integration
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  test_pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      
+      - name: Setup Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.19
+        
+      - name: Test code
+        run: go test -v ./...
+
+      - name: Test build
+        run: go build -v ./...
